@@ -1,10 +1,10 @@
-from dataOperation import create_generation
+from dataOperation import create_population
 
 
 def evaluate(crossover, mutation, initial_data, k, m, n, generation_count=20000 ):
     base_performance_results = []
     two_opt_performance_results = []
-    initial_generation = create_generation(initial_data)
+    initial_generation = create_population(initial_data)
     base_generation = initial_generation.clone()
     for j in range(generation_count):
         #do crossover, mutation  something
