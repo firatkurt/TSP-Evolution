@@ -17,7 +17,7 @@ class GenerationResult:
         return "Best result: {0} Average result: {1}".format(self.strong, self.avg)
 
 
-def generation(initial_data, cx, mt, two_opt=False, generation_count=20000):
+def generation(initial_data, cx, mt, two_opt=False, k=20, m=1, n=5, generation_count=20000):
     population = create_population(initial_data)
     crossover_method = crossover.get_crossover(cx)
     mutation_method = mutation.get_mutation(mt)
@@ -29,8 +29,8 @@ def generation(initial_data, cx, mt, two_opt=False, generation_count=20000):
         if rand <= 10:
             offspring1 = mutation_method(initial_data, offspring1)
             offspring2 = mutation_method(initial_data, offspring2)
-        if two_opt and i % 20 == 0:
-            twooptoperator.execute(initial_data, population)
+        if two_opt and i % k == 0:
+            twooptoperator.execute(initial_data, population, m, n)
         weak, rand_selected = selection.survival_selection(population)
         population.individuals[weak[0]] = offspring1
         population.individuals[rand_selected[0]] = offspring2

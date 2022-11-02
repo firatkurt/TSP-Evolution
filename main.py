@@ -2,12 +2,12 @@ import tsplib95
 from dataOperation import create_instance, total_distance
 import population
 import Experimental.crossovermutationtypeevalutation as comte
-
+import Experimental.performanceofga as pog
 
 def main():
     initial = tsplib95.load("Documents/kroA100.tsp")
-    cxs = ["PMX", "OX"]
-    mts = ["SM", "IM", "IVM"]
+
+    pog.evaluate_all(initial)
     results = comte.evaluate_all(initial, cxs, mts, iteration_count=100, generation_count=20000)
     individuals = []
     for _ in range(50):

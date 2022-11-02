@@ -34,8 +34,10 @@ def evaluate(initial_data, cx, mt, iteration_count=100, generation_count=20000):
     return cx + "_" + mt, avg_thousand_results, avg_five_thousand_results, avg_twenty_thousand_results
 
 
-def evaluate_all(initial_data, cxs, mts, iteration_count=100, generation_count=20000):
+def evaluate_all(initial_data, iteration_count=100, generation_count=20000):
     all_result = []
+    cxs = ["PMX", "OX"]
+    mts = ["SM", "IM", "IVM"]
     products = itertools.product(cxs, mts)
     for product in products:
         result = evaluate(initial_data, product[0], product[1], iteration_count, generation_count)

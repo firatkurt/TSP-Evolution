@@ -1,14 +1,29 @@
-from dataOperation import create_population
+import generation
+import matplotlib.pyplot as plt
 
 
-def evaluate(crossover, mutation, initial_data, generation_count=20000):
-    best_performance_results = []
-    avg_performance_results = []
-    initial_generation = create_population(initial_data)
-    for j in range(generation_count):
-        #do crossover, mutation and two_opt something
-        _, best = initial_generation.strong()
-        best_performance_results.append(best)
-        average = initial_generation.average()
-        avg_performance_results.append(average)
-    return best_performance_results, avg_performance_results
+def evaluate(initial_data, cx, mt, generation_count=20000):
+    result = generation.generation(initial_data, cx, mt, True, generation_count)
+    return result
+
+
+def evaluate_all(initial_data):
+    best = evaluate(initial_data, "PMX", "IM")
+    worst = evaluate(initial_data, "PMX", "SM")
+    x = list(range(1, len(best)+1))
+    best_best = [i.strong for i in best]
+    best_avg = [i.avg for i in best]
+
+    worst_best = [i.strong for i in worst]
+    worst_avg = [i.avg for i in worst]
+
+    figure, axis = plt.subplots(2, 1)
+    figure.tight_layout(pad=5.0)
+    axis[0].plot(x, best_best, label="Best")
+    axis[0].plot(x, best_avg, label="Avg")
+    axis[0].set_title("PMX and IM Best Result")
+
+    axis[1].plot(x, worst_best, label="Best")
+    axis[1].plot(x, worst_avg, label="Avg")
+    axis[1].set_title("PMX and SM Worst Result")
+    plt.show()

@@ -1,24 +1,29 @@
+import itertools
+import generation
 from dataOperation import create_population
 
 
-def evaluate(crossover, mutation, initial_data, k, m, n, generation_count=20000 ):
-    base_performance_results = []
-    two_opt_performance_results = []
-    initial_generation = create_population(initial_data)
-    base_generation = initial_generation.clone()
-    for j in range(generation_count):
-        #do crossover, mutation  something
-        pass
-    _, base_best = base_generation.strong()
-    _, base_worst = base_generation.weak()
-    base_avg = base_generation.average()
-    for j in range(generation_count):
-        # do crossover, mutation and 2_opts  something
-        pass
-    _, two_opt_best = base_generation.strong()
-    _, two_opt_worst = base_generation.weak()
-    two_opt_avg = base_generation.average()
-    best_rate = (base_best/two_opt_best) - 1
-    worst_rate = (base_worst/two_opt_worst) - 1
-    avg_rate = (base_avg/two_opt_avg) - 1
-    return best_rate, worst_rate, avg_rate
+def evaluate(initial_data, cx, mt, k=20, m=1, n=5, iteration_count=100,  generation_count=20000):
+    twenty_thousand_results = []
+    for i in range(iteration_count):
+        result = generation.generation(initial_data, cx, mt, True, k, m, n, generation_count=generation_count)
+        if len(result) != generation_count:
+            raise Exception("Wrong number of generation")
+        twenty_thousand_results.append(result[-1])
+    best = min(twenty_thousand_results, key= lambda x: x.strong)
+    worst = max(twenty_thousand_results, key= lambda x: x.strong)
+    avg = sum([i.avg for i in twenty_thousand_results]) / len(twenty_thousand_results)
+    return cx + "_" + mt, best, worst, avg
+
+
+def evaluate_all(initial_data, iteration_count=100, generation_count=20000):
+    k = [10, 20, 50]
+    m = [1, 3, 5]
+    n = [5, 10, 20]
+    all_result = []
+    products = itertools.product(k, m, n)
+    for product in products:
+        result = evaluate(initial_data, "PMX", "IM", product[0], product[1], product[2], iteration_count, generation_count)
+        all_result.append(result)
+
+    base = evaluate(initial_data, "PMX", "IM", iteration_count, generation_count)
